@@ -1,15 +1,16 @@
 package io.github.phantamanta44.discord4j.data.wrapper;
 
-import com.github.fge.lambdas.Throwing;
 import io.github.phantamanta44.discord4j.core.RequestQueue;
 import io.github.phantamanta44.discord4j.util.concurrent.deferred.INullaryPromise;
 import io.github.phantamanta44.discord4j.util.concurrent.deferred.IUnaryPromise;
 import sx.blah.discord.handle.obj.IChannel;
 
+import java.io.File;
+import java.io.InputStream;
 import java.util.stream.Stream;
 
 public class Channel extends Wrapper<IChannel> { // TODO Message related stuff
-    // TODO File sending
+
     Channel(IChannel backing) {
         super(backing);
     }
@@ -27,7 +28,7 @@ public class Channel extends Wrapper<IChannel> { // TODO Message related stuff
     }
 
     public IUnaryPromise<Stream<Message>> pinned() {
-        return RequestQueue.request(Throwing.supplier(() -> getBacking().getPinnedMessages().stream().map(Wrapper::wrap)));
+        return RequestQueue.request(() -> getBacking().getPinnedMessages().stream().map(Wrapper::wrap));
     }
 
     public int position() {
@@ -59,35 +60,51 @@ public class Channel extends Wrapper<IChannel> { // TODO Message related stuff
     }
 
     public INullaryPromise destroy() {
-        return RequestQueue.request(Throwing.runnable(() -> getBacking().delete()));
+        return RequestQueue.request(() -> getBacking().delete());
     }
 
     public IUnaryPromise<String> generateInvite(int age, int uses, boolean tempUsers) {
-        return RequestQueue.request(Throwing.supplier(() -> getBacking().createInvite(age, uses, tempUsers).getInviteCode()));
+        return RequestQueue.request(() -> getBacking().createInvite(age, uses, tempUsers).getInviteCode());
     }
 
     public INullaryPromise pin(Message msg) {
-        return RequestQueue.request(Throwing.runnable(() -> getBacking().pin(msg.getBacking())));
+        return RequestQueue.request(() -> getBacking().pin(msg.getBacking()));
+    }
+
+    public IUnaryPromise<Message> send(File file) {
+        return RequestQueue.request(() -> Wrapper.wrap(getBacking().sendFile(file)));
+    }
+
+    public IUnaryPromise<Message> send(File file, String caption) {
+        return RequestQueue.request(() -> Wrapper.wrap(getBacking().sendFile(file, caption)));
+    }
+
+    public IUnaryPromise<Message> send(String fileName, InputStream dataSrc) {
+        return RequestQueue.request(() -> Wrapper.wrap(getBacking().sendFile(dataSrc, fileName)));
+    }
+
+    public IUnaryPromise<Message> send(String fileName, InputStream dataSrc, String caption) {
+        return RequestQueue.request(() -> Wrapper.wrap(getBacking().sendFile(dataSrc, fileName, caption)));
     }
 
     public IUnaryPromise<Message> send(String msg) {
-        return RequestQueue.request(Throwing.supplier(() -> Wrapper.wrap(getBacking().sendMessage(msg))));
+        return RequestQueue.request(() -> Wrapper.wrap(getBacking().sendMessage(msg)));
     }
 
     public INullaryPromise setName(String name) {
-        return RequestQueue.request(Throwing.runnable(() -> getBacking().changeName(name)));
+        return RequestQueue.request(() -> getBacking().changeName(name));
     }
 
     public INullaryPromise setPosition(int position) {
-        return RequestQueue.request(Throwing.runnable(() -> getBacking().changePosition(position)));
+        return RequestQueue.request(() -> getBacking().changePosition(position));
     }
 
     public INullaryPromise setTopic(String topic) {
-        return RequestQueue.request(Throwing.runnable(() -> getBacking().changeTopic(topic)));
+        return RequestQueue.request(() -> getBacking().changeTopic(topic));
     }
 
     public INullaryPromise unpin(Message msg) {
-        return RequestQueue.request(Throwing.runnable(() -> getBacking().unpin(msg.getBacking())));
+        return RequestQueue.request(() -> getBacking().unpin(msg.getBacking()));
     }
 
 }

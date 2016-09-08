@@ -7,7 +7,7 @@ public interface IBinaryPromise<A, B> extends IPromise {
 
     IBinaryPromise<A, B> done(BiConsumer<A, B> callback);
 
-    IBinaryPromise<A, B> fail(Consumer<Exception> callback);
+    IBinaryPromise<A, B> fail(Consumer<Throwable> callback);
 
     IBinaryPromise<A, B> always(BiConsumer<A, B> callback);
 

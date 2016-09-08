@@ -6,7 +6,7 @@ public interface IUnaryPromise<A> extends IPromise {
 
     IUnaryPromise<A> done(Consumer<A> callback);
 
-    IUnaryPromise<A> fail(Consumer<Exception> callback);
+    IUnaryPromise<A> fail(Consumer<Throwable> callback);
 
     IUnaryPromise<A> always(Consumer<A> callback);
 

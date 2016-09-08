@@ -1,6 +1,5 @@
 package io.github.phantamanta44.discord4j.data.wrapper;
 
-import com.github.fge.lambdas.Throwing;
 import io.github.phantamanta44.discord4j.core.RequestQueue;
 import io.github.phantamanta44.discord4j.data.Permission;
 import io.github.phantamanta44.discord4j.data.icon.IIcon;
@@ -67,42 +66,42 @@ public class Guild extends Wrapper<IGuild> { // TODO Voice channel stuff
     }
 
     public INullaryPromise addBot(String clientId, Permission... perms) {
-        return RequestQueue.request(Throwing.runnable(() -> {
+        return RequestQueue.request(() -> {
             Permissions[] unwrapped = Arrays.stream(perms).map(Permission::getBacking).toArray(Permissions[]::new);
             getBacking().addBot(clientId, EnumSet.of(unwrapped[0], Arrays.copyOfRange(unwrapped, 1, unwrapped.length)));
-        }));
+        });
     }
 
     public INullaryPromise ban(User user) {
-        return RequestQueue.request(Throwing.runnable(() -> getBacking().banUser(user.getBacking())));
+        return RequestQueue.request(() -> getBacking().banUser(user.getBacking()));
     }
 
     public INullaryPromise destroy() {
-        return RequestQueue.request(Throwing.runnable(() -> getBacking().deleteGuild()));
+        return RequestQueue.request(() -> getBacking().deleteGuild());
     }
 
     public IUnaryPromise<Channel> makeChannel(String name) {
-        return RequestQueue.request(Throwing.supplier(() -> Wrapper.wrap(getBacking().createChannel(name))));
+        return RequestQueue.request(() -> Wrapper.wrap(getBacking().createChannel(name)));
     }
 
     public IUnaryPromise<Role> makeRole() {
-        return RequestQueue.request(Throwing.supplier(() -> Wrapper.wrap(getBacking().createRole())));
+        return RequestQueue.request(() -> Wrapper.wrap(getBacking().createRole()));
     }
 
     public IUnaryPromise<Integer> pruneUsers(int inactiveDays) {
-        return RequestQueue.request(Throwing.supplier(() -> getBacking().pruneUsers(inactiveDays)));
+        return RequestQueue.request(() -> getBacking().pruneUsers(inactiveDays));
     }
 
     public INullaryPromise setIcon(IIcon icon) {
-        return RequestQueue.request(Throwing.runnable(() -> getBacking().changeIcon(Image.forStream("png", ImageUtils.inputStream(icon.getImage())))));
+        return RequestQueue.request(() -> getBacking().changeIcon(Image.forStream("png", ImageUtils.inputStream(icon.getImage()))));
     }
 
     public INullaryPromise setName(String name) {
-        return RequestQueue.request(Throwing.runnable(() -> getBacking().changeName(name)));
+        return RequestQueue.request(() -> getBacking().changeName(name));
     }
 
     public INullaryPromise unban(User user) {
-        return RequestQueue.request(Throwing.runnable(() -> getBacking().pardonUser(user.id())));
+        return RequestQueue.request(() -> getBacking().pardonUser(user.id()));
     }
 
 }

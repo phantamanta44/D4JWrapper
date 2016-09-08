@@ -6,7 +6,7 @@ public interface INullaryPromise extends IPromise {
 
     INullaryPromise done(Runnable callback);
 
-    INullaryPromise fail(Consumer<Exception> callback);
+    INullaryPromise fail(Consumer<Throwable> callback);
 
     INullaryPromise always(Runnable callback);
 

@@ -32,7 +32,7 @@ public class UnaryDeferred<A> extends AbstractDeferred<IUnaryPromise<A>> {
             }
 
             @Override
-            public IUnaryPromise<A> fail(Consumer<Exception> callback) {
+            public IUnaryPromise<A> fail(Consumer<Throwable> callback) {
                 if (state() == PromiseState.PENDING)
                     onReject = onReject.andThen(callback);
                 else

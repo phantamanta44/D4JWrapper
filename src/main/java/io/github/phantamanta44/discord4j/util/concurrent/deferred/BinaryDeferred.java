@@ -35,7 +35,7 @@ public class BinaryDeferred<A, B> extends AbstractDeferred<IBinaryPromise<A, B>>
             }
 
             @Override
-            public IBinaryPromise<A, B> fail(Consumer<Exception> callback) {
+            public IBinaryPromise<A, B> fail(Consumer<Throwable> callback) {
                 if (state() == PromiseState.PENDING)
                     onReject = onReject.andThen(callback);
                 else

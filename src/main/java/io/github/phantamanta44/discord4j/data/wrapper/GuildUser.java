@@ -1,6 +1,5 @@
 package io.github.phantamanta44.discord4j.data.wrapper;
 
-import com.github.fge.lambdas.Throwing;
 import io.github.phantamanta44.discord4j.core.RequestQueue;
 import io.github.phantamanta44.discord4j.data.Permission;
 import io.github.phantamanta44.discord4j.util.CollUtils;
@@ -53,16 +52,16 @@ public class GuildUser extends User {
     }
 
     public INullaryPromise kick() {
-        return RequestQueue.request(Throwing.runnable(() -> guild.getBacking().kickUser(getBacking())));
+        return RequestQueue.request(() -> guild.getBacking().kickUser(getBacking()));
     }
 
     public INullaryPromise setNickname(String nick) {
-        return RequestQueue.request(Throwing.runnable(() -> guild.getBacking().setUserNickname(getBacking(), nick)));
+        return RequestQueue.request(() -> guild.getBacking().setUserNickname(getBacking(), nick));
     }
 
     public INullaryPromise setRoles(Role... roles) {
         IRole[] unwrapped = Arrays.stream(roles).map(Wrapper::getBacking).toArray(IRole[]::new);
-        return RequestQueue.request(Throwing.runnable(() -> guild.getBacking().editUserRoles(getBacking(), unwrapped)));
+        return RequestQueue.request(() -> guild.getBacking().editUserRoles(getBacking(), unwrapped));
     }
 
 }

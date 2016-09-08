@@ -1,9 +1,9 @@
 package io.github.phantamanta44.discord4j.data.wrapper;
 
-import com.github.fge.lambdas.Throwing;
 import io.github.phantamanta44.discord4j.core.RequestQueue;
 import io.github.phantamanta44.discord4j.data.Attachment;
 import io.github.phantamanta44.discord4j.util.concurrent.deferred.INullaryPromise;
+import io.github.phantamanta44.discord4j.util.concurrent.deferred.IUnaryPromise;
 import sx.blah.discord.handle.obj.IMessage;
 
 import java.time.LocalDateTime;
@@ -48,11 +48,11 @@ public class Message extends Wrapper<IMessage> { // TODO Mention getter
     }
 
     public INullaryPromise destroy() {
-        return RequestQueue.request(Throwing.runnable(getBacking()::delete));
+        return RequestQueue.request(getBacking()::delete);
     }
 
-    public INullaryPromise edit(String content) {
-        return RequestQueue.request(Throwing.runnable(() -> getBacking().edit(content)));
+    public IUnaryPromise<Message> edit(String content) {
+        return RequestQueue.request(() -> Wrapper.wrap(getBacking().edit(content)));
     }
 
 }

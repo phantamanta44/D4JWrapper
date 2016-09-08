@@ -1,6 +1,5 @@
 package io.github.phantamanta44.discord4j.data.wrapper;
 
-import com.github.fge.lambdas.Throwing;
 import io.github.phantamanta44.discord4j.core.RequestQueue;
 import io.github.phantamanta44.discord4j.data.Permission;
 import io.github.phantamanta44.discord4j.util.concurrent.deferred.INullaryPromise;
@@ -70,28 +69,28 @@ public class Role extends Wrapper<IRole> {
     }
 
     public INullaryPromise destroy() {
-        return RequestQueue.request(Throwing.runnable(getBacking()::delete));
+        return RequestQueue.request(getBacking()::delete);
     }
 
     public INullaryPromise setColor(Color color) {
-        return RequestQueue.request(Throwing.runnable(() -> getBacking().changeColor(color)));
+        return RequestQueue.request(() -> getBacking().changeColor(color));
     }
 
     public INullaryPromise setHoisted(boolean hoisted) {
-        return RequestQueue.request(Throwing.runnable(() -> getBacking().changeHoist(hoisted)));
+        return RequestQueue.request(() -> getBacking().changeHoist(hoisted));
     }
 
     public INullaryPromise setName(String name) {
-        return RequestQueue.request(Throwing.runnable(() -> getBacking().changeName(name)));
+        return RequestQueue.request(() -> getBacking().changeName(name));
     }
 
     public INullaryPromise setPerms(Permission... perms) {
         EnumSet<Permissions> unwrapped = EnumSet.copyOf(Arrays.stream(perms).map(Permission::getBacking).collect(Collectors.toSet()));
-        return RequestQueue.request(Throwing.runnable(() -> getBacking().changePermissions(unwrapped)));
+        return RequestQueue.request(() -> getBacking().changePermissions(unwrapped));
     }
 
     public INullaryPromise setTaggable(boolean taggable) {
-        return RequestQueue.request(Throwing.runnable(() -> getBacking().changeMentionable(taggable)));
+        return RequestQueue.request(() -> getBacking().changeMentionable(taggable));
     }
 
 }

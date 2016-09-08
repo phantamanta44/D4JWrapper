@@ -1,6 +1,5 @@
 package io.github.phantamanta44.discord4j.data.wrapper;
 
-import com.github.fge.lambdas.Throwing;
 import io.github.phantamanta44.discord4j.core.RequestQueue;
 import io.github.phantamanta44.discord4j.data.Permission;
 import io.github.phantamanta44.discord4j.data.wrapper.user.OverrideSet;
@@ -10,7 +9,6 @@ import sx.blah.discord.handle.obj.Permissions;
 
 import java.util.Collection;
 import java.util.EnumSet;
-import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -40,11 +38,11 @@ public class ChannelRole extends Role {
     public INullaryPromise setOverridePerms(Collection<Permission> allow, Collection<Permission> deny) {
         EnumSet<Permissions> allowUnwrap = EnumSet.copyOf(allow.stream().map(Permission::getBacking).collect(Collectors.toSet()));
         EnumSet<Permissions> denyUnwrap = EnumSet.copyOf(deny.stream().map(Permission::getBacking).collect(Collectors.toSet()));
-        return RequestQueue.request(Throwing.runnable(() -> channel.getBacking().overrideRolePermissions(getBacking(), allowUnwrap, denyUnwrap)));
+        return RequestQueue.request(() -> channel.getBacking().overrideRolePermissions(getBacking(), allowUnwrap, denyUnwrap));
     }
 
     public INullaryPromise unsetOverridePerms() {
-        return RequestQueue.request(Throwing.runnable(() -> channel.getBacking().removePermissionsOverride(getBacking())));
+        return RequestQueue.request(() -> channel.getBacking().removePermissionsOverride(getBacking()));
     }
 
 }

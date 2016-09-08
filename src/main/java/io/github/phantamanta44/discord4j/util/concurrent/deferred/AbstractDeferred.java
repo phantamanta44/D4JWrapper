@@ -6,10 +6,10 @@ import java.util.function.Consumer;
 
 public abstract class AbstractDeferred<P extends IPromise> implements IDeferred<P> {
 
-    protected Consumer<Exception> onReject;
+    protected Consumer<Throwable> onReject;
     protected Runnable onProgress;
 
-    protected Exception exception;
+    protected Throwable exception;
     protected PromiseState state;
 
     public AbstractDeferred() {
@@ -19,7 +19,7 @@ public abstract class AbstractDeferred<P extends IPromise> implements IDeferred<
     }
 
     @Override
-    public void reject(Exception e) {
+    public void reject(Throwable e) {
         this.exception = e;
         state = PromiseState.REJECTED;
         onReject.accept(e);

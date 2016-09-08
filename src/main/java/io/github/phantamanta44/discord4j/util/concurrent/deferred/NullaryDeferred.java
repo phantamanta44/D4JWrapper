@@ -30,7 +30,7 @@ public class NullaryDeferred extends AbstractDeferred<INullaryPromise> {
             }
 
             @Override
-            public INullaryPromise fail(Consumer<Exception> callback) {
+            public INullaryPromise fail(Consumer<Throwable> callback) {
                 if (state() == PromiseState.PENDING)
                     onReject = onReject.andThen(callback);
                 else
