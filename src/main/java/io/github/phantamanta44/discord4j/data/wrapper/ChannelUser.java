@@ -1,7 +1,6 @@
 package io.github.phantamanta44.discord4j.data.wrapper;
 
 import io.github.phantamanta44.discord4j.core.RequestQueue;
-import io.github.phantamanta44.discord4j.core.StaticInit;
 import io.github.phantamanta44.discord4j.data.Permission;
 import io.github.phantamanta44.discord4j.data.wrapper.user.OverrideSet;
 import io.github.phantamanta44.discord4j.util.concurrent.deferred.INullaryPromise;
@@ -15,15 +14,8 @@ import java.util.stream.Collectors;
 
 public class ChannelUser extends GuildUser {
 
-    @StaticInit
-    private static void init(Bot bot) {
-        // TODO Typing listener
-    }
-
     final GuildUser parent;
     final Channel channel;
-
-    private boolean typingStatus = false;
 
     ChannelUser(GuildUser parent, Channel channel) {
         super(parent.parent, parent.guild);
@@ -40,7 +32,7 @@ public class ChannelUser extends GuildUser {
     }
 
     public boolean typing() {
-        return typingStatus;
+        throw new UnsupportedOperationException();
     }
 
     @Override

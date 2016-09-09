@@ -2,6 +2,9 @@ package io.github.phantamanta44.discord4j.data.wrapper;
 
 import io.github.phantamanta44.discord4j.core.Discord;
 import io.github.phantamanta44.discord4j.core.RequestQueue;
+import io.github.phantamanta44.discord4j.core.command.CommandDispatcher;
+import io.github.phantamanta44.discord4j.core.event.EventBus;
+import io.github.phantamanta44.discord4j.core.module.ModuleManager;
 import io.github.phantamanta44.discord4j.data.icon.IIcon;
 import io.github.phantamanta44.discord4j.data.wrapper.user.Application;
 import io.github.phantamanta44.discord4j.data.wrapper.user.ISubtitle;
@@ -21,6 +24,9 @@ public class Bot { // TODO Events
     static Bot instance;
 
     final IDiscordClient dcCli;
+    final EventBus eventBus;
+    final ModuleManager modManager;
+    final CommandDispatcher cmds;
 
     public Bot(String token) throws DiscordException {
         Discord.getLogger().info("Attempting to authenticate with Discord...");
@@ -34,6 +40,9 @@ public class Bot { // TODO Events
                 throw new IllegalArgumentException("User is not a bot account!");
         });
         dcCli.login();
+        eventBus = new EventBus(dcCli);
+        modManager = new ModuleManager(eventBus);
+        cmds = new CommandDispatcher(eventBus, modManager);
     }
 
     public User user() {
@@ -52,8 +61,20 @@ public class Bot { // TODO Events
         return dcCli.getChannels(false).stream().map(Wrapper::wrap);
     }
 
+    public CommandDispatcher commandMan() {
+        return cmds;
+    }
+
+    public EventBus eventBus() {
+        return eventBus;
+    }
+
     public Stream<Guild> guilds() {
         return dcCli.getGuilds().stream().map(Wrapper::wrap);
+    }
+
+    public ModuleManager moduleMan() {
+        return modManager;
     }
 
     public String token() {

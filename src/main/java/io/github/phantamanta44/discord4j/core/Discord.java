@@ -21,7 +21,7 @@ public class Discord {
             .construct();
     private static final Logger logger = LoggerFactory.getLogger("D4JWrapper");
 
-    public static ExecutorService getExecutorPool() {
+    public static ScheduledExecutorService getExecutorPool() {
         return globalExecutorPool;
     }
 
