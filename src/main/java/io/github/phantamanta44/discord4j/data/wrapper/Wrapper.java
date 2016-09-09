@@ -3,6 +3,7 @@ package io.github.phantamanta44.discord4j.data.wrapper;
 import sx.blah.discord.handle.obj.*;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -53,8 +54,8 @@ public abstract class Wrapper<T extends IDiscordObject<T>> {
         return getBacking().getID();
     }
 
-    public LocalDateTime timestamp() {
-        return getBacking().getCreationDate();
+    public long timestamp() {
+        return getBacking().getCreationDate().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
     }
 
 }

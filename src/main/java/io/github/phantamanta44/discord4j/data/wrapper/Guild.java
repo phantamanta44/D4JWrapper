@@ -45,8 +45,8 @@ public class Guild extends Wrapper<IGuild> { // TODO Voice channel stuff
         return getBacking().getRoles().stream().map(Wrapper::wrap);
     }
 
-    public Stream<GuildUser> users() {
-        return getBacking().getUsers().stream().map(Wrapper::wrap).map(u -> ((User)u).of(this));
+    public GuildUserStream users() {
+        return new UserStream(getBacking().getUsers()).of(this);
     }
 
     public Channel channel(String id) {
@@ -57,11 +57,11 @@ public class Guild extends Wrapper<IGuild> { // TODO Voice channel stuff
         return ((User)Wrapper.wrap(getBacking().getUserByID(id))).of(this);
     }
 
-    public Stream<GuildUser> usersOfName(String name) {
+    public GuildUserStream usersOfName(String name) {
         return users().filter(u -> u.name().equalsIgnoreCase(name));
     }
 
-    public Stream<GuildUser> usersOfNick(String nick) {
+    public GuildUserStream usersOfNick(String nick) {
         return users().filter(GuildUser::hasNickname).filter(u -> u.displayName().equalsIgnoreCase(nick));
     }
 

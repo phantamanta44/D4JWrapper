@@ -9,7 +9,7 @@ import java.io.File;
 import java.io.InputStream;
 import java.util.stream.Stream;
 
-public class Channel extends Wrapper<IChannel> { // TODO Message related stuff
+public class Channel extends Wrapper<IChannel> {
 
     Channel(IChannel backing) {
         super(backing);
@@ -19,12 +19,12 @@ public class Channel extends Wrapper<IChannel> { // TODO Message related stuff
         return Wrapper.wrap(getBacking().getGuild());
     }
 
-    public String name() {
-        return getBacking().getName();
+    public MessageStream messages() {
+        return new MessageStream(getBacking().getMessages());
     }
 
-    public String topic() {
-        return getBacking().getTopic();
+    public String name() {
+        return getBacking().getName();
     }
 
     public IUnaryPromise<Stream<Message>> pinned() {
@@ -39,23 +39,27 @@ public class Channel extends Wrapper<IChannel> { // TODO Message related stuff
         return getBacking().isPrivate();
     }
 
-    public Stream<ChannelUser> users() {
-        return getBacking().getUsersHere().stream().map(Wrapper::wrap).map(u -> ((User)u).of(guild()).of(this));
+    public ChannelUserStream users() {
+        return new UserStream(getBacking().getUsersHere()).of(guild()).of(this);
     }
 
     public String tag() {
         return getBacking().mention();
     }
 
+    public String topic() {
+        return getBacking().getTopic();
+    }
+
     public ChannelUser user(String id) {
         return users().filter(u -> u.id().equalsIgnoreCase(id)).findAny().orElse(null);
     }
 
-    public Stream<ChannelUser> usersOfName(String name) {
+    public ChannelUserStream usersOfName(String name) {
         return users().filter(u -> u.name().equalsIgnoreCase(name));
     }
 
-    public Stream<ChannelUser> usersOfNick(String name) {
+    public ChannelUserStream usersOfNick(String name) {
         return users().filter(GuildUser::hasNickname).filter(u -> u.displayName().equalsIgnoreCase(name));
     }
 

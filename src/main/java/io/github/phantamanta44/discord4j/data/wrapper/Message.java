@@ -7,6 +7,7 @@ import io.github.phantamanta44.discord4j.util.concurrent.deferred.IUnaryPromise;
 import sx.blah.discord.handle.obj.IMessage;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.stream.Stream;
 
 public class Message extends Wrapper<IMessage> { // TODO Mention getter
@@ -39,8 +40,8 @@ public class Message extends Wrapper<IMessage> { // TODO Mention getter
         return Wrapper.wrap(getBacking().getGuild());
     }
 
-    public LocalDateTime lastEdit() {
-        return getBacking().getTimestamp();
+    public long lastEdit() {
+        return getBacking().getTimestamp().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
     }
 
     public boolean pinned() {
