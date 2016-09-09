@@ -14,7 +14,7 @@ public abstract class Wrapper<T extends IDiscordObject<T>> {
     private static final Map<Class, Map<IDiscordObject, Wrapper>> cachedWrappers = new HashMap<>();
 
     static {
-        Stream.of(IGuild.class, IChannel.class, IUser.class, IMessage.class, IRole.class).forEach(c -> cachedWrappers.put(c, new ConcurrentHashMap<>()));
+        Stream.of(IGuild.class, IPrivateChannel.class, IChannel.class, IUser.class, IMessage.class, IRole.class).forEach(c -> cachedWrappers.put(c, new ConcurrentHashMap<>()));
     }
 
     @SuppressWarnings("unchecked")
@@ -24,6 +24,8 @@ public abstract class Wrapper<T extends IDiscordObject<T>> {
             return (W)wrapped;
         if (raw instanceof IGuild)
             return (W)cache(new Guild((IGuild)raw));
+        else if (raw instanceof IPrivateChannel)
+            return (W)cache(new PrivateChannel((IPrivateChannel)raw));
         else if (raw instanceof IChannel)
             return (W)cache(new Channel((IChannel)raw));
         else if (raw instanceof IUser)

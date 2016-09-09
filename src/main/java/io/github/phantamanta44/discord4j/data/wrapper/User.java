@@ -1,7 +1,9 @@
 package io.github.phantamanta44.discord4j.data.wrapper;
 
+import io.github.phantamanta44.discord4j.core.RequestQueue;
 import io.github.phantamanta44.discord4j.data.icon.UrlIcon;
 import io.github.phantamanta44.discord4j.data.wrapper.user.*;
+import io.github.phantamanta44.discord4j.util.concurrent.deferred.IUnaryPromise;
 import sx.blah.discord.handle.obj.IUser;
 import sx.blah.discord.handle.obj.Status;
 
@@ -31,6 +33,10 @@ public class User extends Wrapper<IUser> {
 
     public String name() {
         return getBacking().getName();
+    }
+
+    public IUnaryPromise<PrivateChannel> privateChannel() {
+        return RequestQueue.request(() -> Wrapper.wrap(Bot.instance.dcCli.getOrCreatePMChannel(getBacking())));
     }
 
     public UserStatus status() {

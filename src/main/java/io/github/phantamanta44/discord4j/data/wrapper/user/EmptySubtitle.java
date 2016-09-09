@@ -1,5 +1,7 @@
 package io.github.phantamanta44.discord4j.data.wrapper.user;
 
+import sx.blah.discord.handle.obj.Status;
+
 public class EmptySubtitle implements ISubtitle {
 
     public static final EmptySubtitle INSTANCE = new EmptySubtitle();
@@ -16,6 +18,11 @@ public class EmptySubtitle implements ISubtitle {
     @Override
     public String getUrl() {
         return null;
+    }
+
+    @Override
+    public Status unwrap() {
+        return Status.empty();
     }
 
 }

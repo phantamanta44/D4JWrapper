@@ -35,10 +35,6 @@ public class Channel extends Wrapper<IChannel> {
         return getBacking().getPosition();
     }
 
-    public boolean isPrivate() {
-        return getBacking().isPrivate();
-    }
-
     public ChannelUserStream users() {
         return new UserStream(getBacking().getUsersHere()).of(guild()).of(this);
     }
