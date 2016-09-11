@@ -1,16 +1,14 @@
 package io.github.phantamanta44.discord4j.core;
 
-import com.github.fge.lambdas.Throwing;
 import io.github.phantamanta44.discord4j.data.wrapper.Bot;
 import io.github.phantamanta44.discord4j.util.concurrent.ThreadPoolFactory;
-import io.github.phantamanta44.discord4j.util.concurrent.deferred.Deferreds;
 import io.github.phantamanta44.discord4j.util.concurrent.deferred.IUnaryPromise;
+import io.github.phantamanta44.discord4j.util.concurrent.deferred.UnaryDeferred;
 import io.github.phantamanta44.discord4j.util.reflection.Reflect;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Modifier;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ScheduledExecutorService;
 
 public class Discord {
@@ -21,16 +19,25 @@ public class Discord {
             .construct();
     private static final Logger logger = LoggerFactory.getLogger("D4JWrapper");
 
-    public static ScheduledExecutorService getExecutorPool() {
+    private static String owner;
+
+    public static ScheduledExecutorService executorPool() {
         return globalExecutorPool;
     }
 
-    public static Logger getLogger() {
+    public static Logger logger() {
         return logger;
     }
 
-    public static IUnaryPromise<Bot> authenticate(String token) {
-        return Deferreds.call(Throwing.supplier(() -> new Bot(token))).promise();
+    public static IUnaryPromise<Bot> authenticate(String token, String ownerId) {
+        owner = ownerId;
+        UnaryDeferred<Bot> def = new UnaryDeferred<>();
+        new Bot(token, def);
+        return def.promise();
+    }
+
+    public static String ownerId() {
+        return owner;
     }
 
     public static void runStaticInitializers(Bot bot) {

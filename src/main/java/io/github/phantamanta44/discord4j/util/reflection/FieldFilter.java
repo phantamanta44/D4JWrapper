@@ -1,11 +1,13 @@
 package io.github.phantamanta44.discord4j.util.reflection;
 
 import io.github.lukehutch.fastclasspathscanner.FastClasspathScanner;
-import io.github.phantamanta44.discord4j.util.CollUtils;
 import io.github.phantamanta44.discord4j.util.BitUtils;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Predicate;
@@ -23,13 +25,17 @@ public class FieldFilter extends MemberFilter<Field> {
 
     @Override
     Stream<Field> accumulate() {
-        Set<Class> types = new HashSet<>();
-        getScanner().matchAllClasses(types::add).scan();
-        return types.stream().flatMap(t -> Arrays.stream(t.getDeclaredFields()));
+        Set<Field> fields = new HashSet<>();
+        getScanner().scan().getNamesOfAllClasses().forEach(cn -> {
+            try {
+                Collections.addAll(fields, Class.forName(cn).getDeclaredFields());
+            } catch (NoClassDefFoundError | ClassNotFoundException | ExceptionInInitializerError ignored) { }
+        });
+        return fields.stream();
     }
 
     public FieldFilter mask(int mods) {
-        return new FieldFilter(this, m -> BitUtils.hasFlags(m.getModifiers(), mods));
+        return new FieldFilter(this, f -> BitUtils.hasFlags(f.getModifiers(), mods));
     }
 
     public FieldFilter mod(int... mods) {
@@ -37,11 +43,12 @@ public class FieldFilter extends MemberFilter<Field> {
     }
 
     public FieldFilter name(String name) {
-        return new FieldFilter(this, m -> m.getName().equals(name));
+        return new FieldFilter(this, f -> f.getName().equals(name));
     }
 
+    @SuppressWarnings("unchecked")
     public FieldFilter tagged(Class<?>... annotations) {
-        return new FieldFilter(this, m -> CollUtils.containsAll(m.getAnnotations(), (Object[])annotations));
+        return new FieldFilter(this, f -> Arrays.stream(annotations).allMatch(a -> f.isAnnotationPresent((Class<? extends Annotation>)a)));
     }
 
     public FieldFilter type(Class<?> fieldType) {

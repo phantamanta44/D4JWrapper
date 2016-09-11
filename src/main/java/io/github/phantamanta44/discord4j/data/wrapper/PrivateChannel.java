@@ -8,7 +8,7 @@ import sx.blah.discord.handle.obj.IPrivateChannel;
 import java.io.File;
 import java.io.InputStream;
 
-public class PrivateChannel extends Wrapper<IChannel> {
+public class PrivateChannel extends Channel {
 
     PrivateChannel(IPrivateChannel backing) {
         super(backing);

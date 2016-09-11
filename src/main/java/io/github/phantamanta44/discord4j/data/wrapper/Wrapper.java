@@ -19,26 +19,30 @@ public abstract class Wrapper<T extends IDiscordObject<T>> {
 
     @SuppressWarnings("unchecked")
     public static <T extends IDiscordObject<T>, W extends Wrapper<T>> W wrap(T raw) {
-        Wrapper wrapped = cachedWrappers.get(raw.getClass()).get(raw);
+        if (raw == null)
+            return null;
+        Class<?>[] ints = raw.getClass().getInterfaces();
+        Class<?> iface = ints[ints.length - 1];
+        Wrapper wrapped = cachedWrappers.get(iface).get(raw);
         if (wrapped != null)
             return (W)wrapped;
         if (raw instanceof IGuild)
-            return (W)cache(new Guild((IGuild)raw));
+            return (W)cache(new Guild((IGuild)raw), iface);
         else if (raw instanceof IPrivateChannel)
-            return (W)cache(new PrivateChannel((IPrivateChannel)raw));
+            return (W)cache(new PrivateChannel((IPrivateChannel)raw), iface);
         else if (raw instanceof IChannel)
-            return (W)cache(new Channel((IChannel)raw));
+            return (W)cache(new Channel((IChannel)raw), iface);
         else if (raw instanceof IUser)
-            return (W)cache(new User((IUser)raw));
+            return (W)cache(new User((IUser)raw), iface);
         else if (raw instanceof IMessage)
-            return (W)cache(new Message((IMessage)raw));
+            return (W)cache(new Message((IMessage)raw), iface);
         else if (raw instanceof IRole)
-            return (W)cache(new Role((IRole)raw));
+            return (W)cache(new Role((IRole)raw), iface);
         throw new IllegalStateException();
     }
 
-    private static Wrapper cache(Wrapper wrapper) {
-        cachedWrappers.get(wrapper.getBacking().getClass()).put(wrapper.getBacking(), wrapper);
+    private static Wrapper cache(Wrapper wrapper, Class<?> iface) {
+        cachedWrappers.get(iface).put(wrapper.getBacking(), wrapper);
         return wrapper;
     }
 
@@ -58,6 +62,11 @@ public abstract class Wrapper<T extends IDiscordObject<T>> {
 
     public long timestamp() {
         return getBacking().getCreationDate().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        return o instanceof Wrapper && ((Wrapper) o).id().equalsIgnoreCase(id());
     }
 
 }

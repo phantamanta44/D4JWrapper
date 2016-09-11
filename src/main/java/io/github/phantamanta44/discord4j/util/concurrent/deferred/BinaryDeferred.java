@@ -29,7 +29,7 @@ public class BinaryDeferred<A, B> extends AbstractDeferred<IBinaryPromise<A, B>>
             public IBinaryPromise<A, B> done(BiConsumer<A, B> callback) {
                 if (state() == PromiseState.PENDING)
                     onResolve = onResolve.andThen(callback);
-                else
+                else if (state() == PromiseState.RESOLVED)
                     callback.accept(a, b);
                 return this;
             }
@@ -38,7 +38,7 @@ public class BinaryDeferred<A, B> extends AbstractDeferred<IBinaryPromise<A, B>>
             public IBinaryPromise<A, B> fail(Consumer<Throwable> callback) {
                 if (state() == PromiseState.PENDING)
                     onReject = onReject.andThen(callback);
-                else
+                else if (state() == PromiseState.REJECTED)
                     callback.accept(exception);
                 return this;
             }

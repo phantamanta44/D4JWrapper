@@ -8,11 +8,11 @@ import java.util.function.Supplier;
 public class Deferreds {
 
     public static NullaryDeferred call(Runnable func) {
-        return call(func, Discord.getExecutorPool());
+        return call(func, Discord.executorPool());
     }
 
     public static <A> UnaryDeferred<A> call(Supplier<A> func) {
-        return call(func, Discord.getExecutorPool());
+        return call(func, Discord.executorPool());
     }
 
     public static NullaryDeferred call(Runnable func, ExecutorService execServ) {

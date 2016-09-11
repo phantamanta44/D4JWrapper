@@ -1,9 +1,10 @@
 package io.github.phantamanta44.discord4j.util.reflection;
 
 import io.github.lukehutch.fastclasspathscanner.FastClasspathScanner;
-import io.github.phantamanta44.discord4j.util.CollUtils;
 import io.github.phantamanta44.discord4j.util.BitUtils;
 
+import java.lang.annotation.Annotation;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Predicate;
@@ -22,7 +23,11 @@ public class TypeFilter extends MemberFilter<Class<?>> {
     @Override
     Stream<Class<?>> accumulate() {
         Set<Class<?>> types = new HashSet<>();
-        getScanner().matchAllClasses(types::add).scan();
+        getScanner().scan().getNamesOfAllClasses().forEach(cn -> {
+            try {
+                types.add(Class.forName(cn));
+            } catch (NoClassDefFoundError | ClassNotFoundException | ExceptionInInitializerError ignored) { }
+        });
         return types.stream();
     }
 
@@ -54,8 +59,9 @@ public class TypeFilter extends MemberFilter<Class<?>> {
         return new TypeFilter(this, t -> t.isAssignableFrom(childClass));
     }
 
+    @SuppressWarnings("unchecked")
     public TypeFilter tagged(Class<?>... annotations) {
-        return new TypeFilter(this, t -> CollUtils.containsAll(t.getAnnotations(), (Object[])annotations));
+        return new TypeFilter(this, t -> Arrays.stream(annotations).allMatch(a -> t.isAnnotationPresent((Class<? extends Annotation>)a)));
     }
 
 }

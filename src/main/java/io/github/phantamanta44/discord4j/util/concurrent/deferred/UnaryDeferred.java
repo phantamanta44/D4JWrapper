@@ -26,7 +26,7 @@ public class UnaryDeferred<A> extends AbstractDeferred<IUnaryPromise<A>> {
             public IUnaryPromise<A> done(Consumer<A> callback) {
                 if (state() == PromiseState.PENDING)
                     onResolve = onResolve.andThen(callback);
-                else
+                else if (state() == PromiseState.RESOLVED)
                     callback.accept(result);
                 return this;
             }
@@ -35,7 +35,7 @@ public class UnaryDeferred<A> extends AbstractDeferred<IUnaryPromise<A>> {
             public IUnaryPromise<A> fail(Consumer<Throwable> callback) {
                 if (state() == PromiseState.PENDING)
                     onReject = onReject.andThen(callback);
-                else
+                else if (state() == PromiseState.REJECTED)
                     callback.accept(exception);
                 return this;
             }

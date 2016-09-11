@@ -30,6 +30,10 @@ public class GuildUser extends User {
         return getBacking().getDisplayName(guild.getBacking());
     }
 
+    public Guild guild() {
+        return guild;
+    }
+
     public boolean hasNickname() {
         return getBacking().getNicknameForGuild(guild.getBacking()).isPresent();
     }

@@ -1,11 +1,12 @@
 package io.github.phantamanta44.discord4j.util.reflection;
 
 import io.github.lukehutch.fastclasspathscanner.FastClasspathScanner;
-import io.github.phantamanta44.discord4j.util.CollUtils;
 import io.github.phantamanta44.discord4j.util.BitUtils;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Predicate;
@@ -23,9 +24,13 @@ public class MethodFilter extends MemberFilter<Method> {
 
     @Override
     Stream<Method> accumulate() {
-        Set<Class> types = new HashSet<>();
-        getScanner().matchAllClasses(types::add).scan();
-        return types.stream().flatMap(t -> Arrays.stream(t.getDeclaredMethods()));
+        Set<Method> methods = new HashSet<>();
+        getScanner().scan().getNamesOfAllClasses().forEach(cn -> {
+            try {
+                Collections.addAll(methods, Class.forName(cn).getDeclaredMethods());
+            } catch (NoClassDefFoundError | ClassNotFoundException | ExceptionInInitializerError ignored) { }
+        });
+        return methods.stream();
     }
 
     public MethodFilter mask(int mods) {
@@ -48,8 +53,9 @@ public class MethodFilter extends MemberFilter<Method> {
         return new MethodFilter(this, m -> m.getReturnType().equals(returnType));
     }
 
+    @SuppressWarnings("unchecked")
     public MethodFilter tagged(Class<?>... annotations) {
-        return new MethodFilter(this, m -> CollUtils.containsAll(m.getAnnotations(), (Object[])annotations));
+        return new MethodFilter(this, m -> Arrays.stream(annotations).allMatch(a -> m.isAnnotationPresent((Class<? extends Annotation>)a)));
     }
 
 }

@@ -1,6 +1,5 @@
 package io.github.phantamanta44.discord4j.core;
 
-import com.github.fge.lambdas.Throwing;
 import com.github.fge.lambdas.runnable.ThrowingRunnable;
 import com.github.fge.lambdas.supplier.ThrowingSupplier;
 import io.github.phantamanta44.discord4j.data.wrapper.Bot;
@@ -11,13 +10,13 @@ import io.github.phantamanta44.discord4j.util.concurrent.deferred.UnaryDeferred;
 import sx.blah.discord.util.DiscordException;
 import sx.blah.discord.util.RateLimitException;
 
-import java.util.LinkedList;
-import java.util.List;
+import java.util.Deque;
 import java.util.OptionalLong;
+import java.util.concurrent.ConcurrentLinkedDeque;
 
 public class RequestQueue {
 
-    private static final List<AbstractRequest> requests = new LinkedList<>();
+    private static final Deque<AbstractRequest> requests = new ConcurrentLinkedDeque<>();
     private static final Object sync = new Object();
 
     @StaticInit
@@ -25,13 +24,14 @@ public class RequestQueue {
         new Thread(() -> {
             while (true) {
                 if (!requests.isEmpty()) {
+                    long currentTime = System.currentTimeMillis();
                     OptionalLong sleepTime = requests.stream().mapToLong(r -> r.time).min();
                     if (sleepTime.isPresent()) {
                         try {
-                            Thread.sleep(sleepTime.getAsLong() - System.currentTimeMillis() + 1L);
-                            requests.stream().filter(r -> r.time <= System.currentTimeMillis()).forEach(AbstractRequest::iteration);
+                            Thread.sleep(Math.max(sleepTime.getAsLong() - currentTime + 1L, 0L));
+                            requests.stream().filter(r -> r.time <= currentTime).forEach(AbstractRequest::iteration);
                         } catch (InterruptedException e) {
-                            Discord.getLogger().error("RequestQueue thread interrupted!");
+                            Discord.logger().error("RequestQueue thread interrupted!");
                             break;
                         }
                     }
@@ -40,13 +40,13 @@ public class RequestQueue {
                         try {
                             sync.wait();
                         } catch (InterruptedException e) {
-                            Discord.getLogger().error("RequestQueue thread interrupted!");
+                            Discord.logger().error("RequestQueue thread interrupted!");
                             break;
                         }
                     }
                 }
             }
-        }, "RequestQueue").run();
+        }, "RequestQueue").start();
     }
 
     public static INullaryPromise request(ThrowingRunnable req) {
@@ -62,7 +62,7 @@ public class RequestQueue {
     }
 
     private static void request(AbstractRequest req) {
-        requests.add(req);
+        requests.offer(req);
         synchronized (sync) {
             sync.notify();
         }

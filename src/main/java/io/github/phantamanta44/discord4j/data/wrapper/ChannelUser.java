@@ -23,6 +23,10 @@ public class ChannelUser extends GuildUser {
         this.channel = channel;
     }
 
+    public Channel channel() {
+        return channel;
+    }
+
     public OverrideSet channelOverrides() {
         IChannel.PermissionOverride backing = channel.getBacking().getUserOverrides().get(id());
         return new OverrideSet(

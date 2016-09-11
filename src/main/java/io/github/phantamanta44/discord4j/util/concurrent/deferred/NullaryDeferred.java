@@ -24,7 +24,7 @@ public class NullaryDeferred extends AbstractDeferred<INullaryPromise> {
             public INullaryPromise done(Runnable callback) {
                 if (state() == PromiseState.PENDING)
                     onResolve = Lambdas.compose(onResolve, callback);
-                else
+                else if (state() == PromiseState.RESOLVED)
                     callback.run();
                 return this;
             }
@@ -33,7 +33,7 @@ public class NullaryDeferred extends AbstractDeferred<INullaryPromise> {
             public INullaryPromise fail(Consumer<Throwable> callback) {
                 if (state() == PromiseState.PENDING)
                     onReject = onReject.andThen(callback);
-                else
+                else if (state() == PromiseState.REJECTED)
                     callback.accept(exception);
                 return this;
             }
