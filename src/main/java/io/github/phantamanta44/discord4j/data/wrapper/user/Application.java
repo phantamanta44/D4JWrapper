@@ -13,15 +13,15 @@ public class Application {
         this.icon = new UrlIcon(iconUrl);
     }
 
-    public String getName() {
+    public String name() {
         return name;
     }
 
-    public String getClientId() {
+    public String clientId() {
         return clientId;
     }
 
-    public UrlIcon getIcon() {
+    public UrlIcon icon() {
         return icon;
     }
 

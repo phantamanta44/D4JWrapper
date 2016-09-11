@@ -12,6 +12,7 @@ public abstract class WrappingStream<T extends Wrapper<W>, W extends IDiscordObj
 
     WrappingStream(Stream<T> backing, C source) {
         this.source = source;
+        this.backing = backing;
     }
 
     public WrappingStream<T, W, C> withId(String id) {
