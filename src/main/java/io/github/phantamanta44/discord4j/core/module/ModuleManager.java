@@ -6,6 +6,7 @@ import io.github.phantamanta44.discord4j.util.reflection.Reflect;
 import java.lang.reflect.Method;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Stream;
 
 public class ModuleManager {
 
@@ -24,7 +25,7 @@ public class ModuleManager {
         try {
             ModMeta meta = new ModMeta(method.getAnnotation(Module.class));
             method.invoke(null, meta.config);
-            loadedMods.put(meta.id, meta);
+            loadedMods.put(meta.info.id(), meta);
         } catch (Exception e) {
             Discord.logger().warn("Failed to load module {}!", method.getName());
             e.printStackTrace();
@@ -40,22 +41,18 @@ public class ModuleManager {
         loadedMods.forEach((id, mod) -> mod.config.writeConfig());
     }
 
-    private static class ModMeta {
+    public Stream<ModMeta> modules() {
+        return loadedMods.values().stream();
+    }
 
-        final String id;
-        final String name;
-        final String desc;
-        final String author;
-        final String[] deps;
-        final ModuleConfig config;
+    public static class ModMeta {
 
-        ModMeta(Module data) {
-            this.id = data.id();
-            this.name = data.name();
-            this.desc = data.desc();
-            this.author = data.author();
-            this.deps = data.deps();
-            this.config = new ModuleConfig(data);
+        public final Module info;
+        public final ModuleConfig config;
+
+        ModMeta(Module info) {
+            this.info = info;
+            this.config = new ModuleConfig(info);
         }
 
     }

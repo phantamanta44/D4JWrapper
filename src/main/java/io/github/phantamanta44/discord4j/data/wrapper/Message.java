@@ -56,4 +56,8 @@ public class Message extends Wrapper<IMessage> { // TODO Mention getter
         return RequestQueue.request(() -> Wrapper.wrap(getBacking().edit(content)));
     }
 
+    public IUnaryPromise<Message> edit(String format, Object... args) {
+        return edit(String.format(format, args));
+    }
+
 }
