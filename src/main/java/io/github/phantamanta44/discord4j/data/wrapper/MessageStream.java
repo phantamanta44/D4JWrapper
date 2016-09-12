@@ -2,13 +2,11 @@ package io.github.phantamanta44.discord4j.data.wrapper;
 
 import io.github.phantamanta44.discord4j.core.RequestQueue;
 import io.github.phantamanta44.discord4j.util.concurrent.deferred.INullaryPromise;
+import io.github.phantamanta44.discord4j.util.concurrent.deferred.NullaryDeferred;
 import sx.blah.discord.handle.obj.IMessage;
 import sx.blah.discord.util.MessageList;
 
-import java.util.Comparator;
-import java.util.Iterator;
-import java.util.Optional;
-import java.util.Spliterator;
+import java.util.*;
 import java.util.function.*;
 import java.util.stream.*;
 
@@ -242,7 +240,14 @@ public class MessageStream extends WrappingStream<Message, IMessage, MessageList
     }
 
     public INullaryPromise destroyAll() {
-        return RequestQueue.request(() -> source.bulkDelete(map(Wrapper::getBacking).collect(Collectors.toList())));
+        List<IMessage> toDel = map(Wrapper::getBacking).collect(Collectors.toList());
+        if (toDel.size() > 1)
+            return RequestQueue.request(() -> source.bulkDelete(toDel));
+        if (toDel.size() == 1)
+            return RequestQueue.request(() -> toDel.get(0).delete());
+        NullaryDeferred def = new NullaryDeferred();
+        def.resolve();
+        return def.promise();
     }
 
 }
