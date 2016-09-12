@@ -76,7 +76,7 @@ public class GuildUserStream extends UserStream<GuildUser> {
 
     @Override
     public GuildUserStream sorted(Comparator<? super GuildUser> comparator) {
-        backing = backing.sorted();
+        backing = backing.sorted(comparator);
         return this;
     }
 

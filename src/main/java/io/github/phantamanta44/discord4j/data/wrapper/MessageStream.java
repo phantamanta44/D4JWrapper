@@ -78,7 +78,7 @@ public class MessageStream extends WrappingStream<Message, IMessage, MessageList
 
     @Override
     public MessageStream sorted(Comparator<? super Message> comparator) {
-        backing = backing.sorted();
+        backing = backing.sorted(comparator);
         return this;
     }
 

@@ -78,7 +78,7 @@ public class UserStream<T extends User> extends WrappingStream<T, IUser, Collect
 
     @Override
     public UserStream<T> sorted(Comparator<? super T> comparator) {
-        backing = backing.sorted();
+        backing = backing.sorted(comparator);
         return this;
     }
 

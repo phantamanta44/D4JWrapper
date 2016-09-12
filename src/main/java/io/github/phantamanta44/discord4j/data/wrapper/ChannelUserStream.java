@@ -76,7 +76,7 @@ public class ChannelUserStream extends UserStream<ChannelUser> {
 
     @Override
     public ChannelUserStream sorted(Comparator<? super ChannelUser> comparator) {
-        backing = backing.sorted();
+        backing = backing.sorted(comparator);
         return this;
     }
 

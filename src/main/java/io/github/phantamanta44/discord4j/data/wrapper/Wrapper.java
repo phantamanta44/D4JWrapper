@@ -1,5 +1,6 @@
 package io.github.phantamanta44.discord4j.data.wrapper;
 
+import io.github.phantamanta44.discord4j.util.MathUtils;
 import sx.blah.discord.handle.obj.*;
 
 import java.time.LocalDateTime;
@@ -9,13 +10,14 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Stream;
 
-public abstract class Wrapper<T extends IDiscordObject<T>> {
+public abstract class Wrapper<T extends IDiscordObject<T>> implements Comparable<Wrapper> {
 
     private static final Map<Class, Map<IDiscordObject, Wrapper>> cachedWrappers = new HashMap<>();
 
     static {
         Stream.of(IGuild.class, IPrivateChannel.class, IChannel.class, IUser.class, IMessage.class, IRole.class).forEach(c -> cachedWrappers.put(c, new ConcurrentHashMap<>()));
     }
+
 
     @SuppressWarnings("unchecked")
     public static <T extends IDiscordObject<T>, W extends Wrapper<T>> W wrap(T raw) {
@@ -67,6 +69,11 @@ public abstract class Wrapper<T extends IDiscordObject<T>> {
     @Override
     public boolean equals(Object o) {
         return o instanceof Wrapper && ((Wrapper) o).id().equalsIgnoreCase(id());
+    }
+
+    @Override
+    public int compareTo(Wrapper o) {
+        return (int)MathUtils.clamp(timestamp() - o.timestamp(), Integer.MIN_VALUE, Integer.MAX_VALUE);
     }
 
 }
