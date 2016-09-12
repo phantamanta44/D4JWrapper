@@ -1,7 +1,5 @@
 package io.github.phantamanta44.discord4j.util.function;
 
-import io.github.phantamanta44.discord4j.data.wrapper.GuildUser;
-
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.IntBinaryOperator;

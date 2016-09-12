@@ -1,18 +1,23 @@
 package io.github.phantamanta44.discord4j.data.wrapper;
 
-import io.github.phantamanta44.discord4j.util.MathUtils;
-import sx.blah.discord.handle.obj.*;
-
-import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Stream;
 
-public abstract class Wrapper<T extends IDiscordObject<T>> implements Comparable<Wrapper> {
+import io.github.phantamanta44.discord4j.util.MathUtils;
+import sx.blah.discord.handle.obj.IChannel;
+import sx.blah.discord.handle.obj.IDiscordObject;
+import sx.blah.discord.handle.obj.IGuild;
+import sx.blah.discord.handle.obj.IMessage;
+import sx.blah.discord.handle.obj.IPrivateChannel;
+import sx.blah.discord.handle.obj.IRole;
+import sx.blah.discord.handle.obj.IUser;
 
-    private static final Map<Class, Map<IDiscordObject, Wrapper>> cachedWrappers = new HashMap<>();
+public abstract class Wrapper<T extends IDiscordObject<T>> implements Comparable<Wrapper<?>> {
+
+    private static final Map<Class<?>, Map<IDiscordObject<?>, Wrapper<?>>> cachedWrappers = new HashMap<>();
 
     static {
         Stream.of(IGuild.class, IPrivateChannel.class, IChannel.class, IUser.class, IMessage.class, IRole.class).forEach(c -> cachedWrappers.put(c, new ConcurrentHashMap<>()));
@@ -25,7 +30,7 @@ public abstract class Wrapper<T extends IDiscordObject<T>> implements Comparable
             return null;
         Class<?>[] ints = raw.getClass().getInterfaces();
         Class<?> iface = ints[ints.length - 1];
-        Wrapper wrapped = cachedWrappers.get(iface).get(raw);
+        Wrapper<?> wrapped = cachedWrappers.get(iface).get(raw);
         if (wrapped != null)
             return (W)wrapped;
         if (raw instanceof IGuild)
@@ -43,7 +48,7 @@ public abstract class Wrapper<T extends IDiscordObject<T>> implements Comparable
         throw new IllegalStateException();
     }
 
-    private static Wrapper cache(Wrapper wrapper, Class<?> iface) {
+    private static Wrapper<?> cache(Wrapper<?> wrapper, Class<?> iface) {
         cachedWrappers.get(iface).put(wrapper.getBacking(), wrapper);
         return wrapper;
     }
@@ -68,11 +73,11 @@ public abstract class Wrapper<T extends IDiscordObject<T>> implements Comparable
 
     @Override
     public boolean equals(Object o) {
-        return o instanceof Wrapper && ((Wrapper) o).id().equalsIgnoreCase(id());
+        return o instanceof Wrapper && ((Wrapper<?>)o).id().equalsIgnoreCase(id());
     }
 
     @Override
-    public int compareTo(Wrapper o) {
+    public int compareTo(Wrapper<?> o) {
         return (int)MathUtils.clamp(timestamp() - o.timestamp(), Integer.MIN_VALUE, Integer.MAX_VALUE);
     }
 

@@ -1,12 +1,11 @@
 package io.github.phantamanta44.discord4j.data.wrapper;
 
-import io.github.phantamanta44.discord4j.core.RequestQueue;
-import io.github.phantamanta44.discord4j.util.concurrent.deferred.IUnaryPromise;
-import sx.blah.discord.handle.obj.IChannel;
-import sx.blah.discord.handle.obj.IPrivateChannel;
-
 import java.io.File;
 import java.io.InputStream;
+
+import io.github.phantamanta44.discord4j.core.RequestQueue;
+import io.github.phantamanta44.discord4j.util.concurrent.deferred.IUnaryPromise;
+import sx.blah.discord.handle.obj.IPrivateChannel;
 
 public class PrivateChannel extends Channel {
 

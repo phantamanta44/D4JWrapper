@@ -1,17 +1,16 @@
 package io.github.phantamanta44.discord4j.util.reflection;
 
-import io.github.lukehutch.fastclasspathscanner.FastClasspathScanner;
-import io.github.phantamanta44.discord4j.util.BitUtils;
-
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
+
+import io.github.lukehutch.fastclasspathscanner.FastClasspathScanner;
+import io.github.phantamanta44.discord4j.util.BitUtils;
 
 public class FieldFilter extends MemberFilter<Field> {
 

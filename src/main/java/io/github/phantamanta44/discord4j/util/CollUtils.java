@@ -1,7 +1,5 @@
 package io.github.phantamanta44.discord4j.util;
 
-import io.github.phantamanta44.discord4j.data.Permission;
-
 import java.util.Arrays;
 import java.util.Collection;
 

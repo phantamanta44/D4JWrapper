@@ -1,14 +1,13 @@
 package io.github.phantamanta44.discord4j.data.wrapper;
 
+import java.time.ZoneId;
+import java.util.stream.Stream;
+
 import io.github.phantamanta44.discord4j.core.RequestQueue;
 import io.github.phantamanta44.discord4j.data.Attachment;
 import io.github.phantamanta44.discord4j.util.concurrent.deferred.INullaryPromise;
 import io.github.phantamanta44.discord4j.util.concurrent.deferred.IUnaryPromise;
 import sx.blah.discord.handle.obj.IMessage;
-
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.util.stream.Stream;
 
 public class Message extends Wrapper<IMessage> { // TODO Mention getter
 

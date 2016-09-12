@@ -76,9 +76,9 @@ public class Reflect {
     }
 
     private static Stream<String> buildDirTree(URL path) {
-        try {
+        try (JarFile jar = new JarFile(path.getFile())) {
             List<String> packages = new ArrayList<>();
-            Enumeration<JarEntry> entries = new JarFile(path.getFile()).entries();
+            Enumeration<JarEntry> entries = jar.entries();
             while (entries.hasMoreElements()) {
                 JarEntry entry = entries.nextElement();
                 if (entry.isDirectory() && !entry.getName().startsWith("META-INF/") && !entry.getName().startsWith("java/"))
