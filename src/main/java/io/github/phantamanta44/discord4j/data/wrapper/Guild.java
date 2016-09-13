@@ -52,6 +52,10 @@ public class Guild extends Wrapper<IGuild> { // TODO Voice channel stuff
     public Channel channel(String id) {
         return Wrapper.wrap(getBacking().getChannelByID(id));
     }
+    
+    public Role role(String id) {
+		return Wrapper.wrap(getBacking().getRoleByID(id));
+	}
 
     public GuildUser user(String id) {
         return ((User)Wrapper.wrap(getBacking().getUserByID(id))).of(this);

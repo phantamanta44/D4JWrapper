@@ -93,6 +93,10 @@ public class Bot { // TODO Events
     public Guild guild(String id) {
         return Wrapper.wrap(dcCli.getGuildByID(id));
     }
+    
+    public User user(String id) {
+    	return Wrapper.wrap(dcCli.getUserByID(id));
+    }
 
     public INullaryPromise leave(Guild guild) {
         return RequestQueue.request(() -> guild.getBacking().leaveGuild());
