@@ -46,7 +46,7 @@ public class Guild extends Wrapper<IGuild> { // TODO Voice channel stuff
     }
 
     public GuildUserStream users() {
-        return new UserStream(getBacking().getUsers()).of(this);
+        return new UserStream<>(getBacking().getUsers()).of(this);
     }
 
     public Channel channel(String id) {

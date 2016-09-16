@@ -36,7 +36,7 @@ public class Channel extends Wrapper<IChannel> {
     }
 
     public ChannelUserStream users() {
-        return new UserStream(getBacking().getUsersHere()).of(guild()).of(this);
+        return new UserStream<>(getBacking().getUsersHere()).of(guild()).of(this);
     }
 
     public String tag() {
