@@ -1,6 +1,14 @@
 package io.github.phantamanta44.discord4j.core.event;
 
+import java.lang.reflect.Method;
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
+
 import com.github.fge.lambdas.Throwing;
+
 import io.github.phantamanta44.discord4j.core.Discord;
 import io.github.phantamanta44.discord4j.core.event.context.GenericEventContext;
 import io.github.phantamanta44.discord4j.core.event.context.IEventContext;
@@ -9,13 +17,6 @@ import io.github.phantamanta44.discord4j.util.reflection.Reflect;
 import sx.blah.discord.api.IDiscordClient;
 import sx.blah.discord.api.events.Event;
 import sx.blah.discord.api.events.IListener;
-
-import java.lang.reflect.Method;
-import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
-import java.util.function.Consumer;
 
 public class EventBus implements IListener<Event> {
 
@@ -34,7 +35,7 @@ public class EventBus implements IListener<Event> {
             for (Method m : h.getDeclaredMethods()) {
                 Handler.On annot = m.getAnnotation(Handler.On.class);
                 if (annot != null)
-                    handlers.add(new HandlerMeta(annot.event(), Throwing.consumer(ctx -> m.invoke(null, ctx)), m.getAnnotation(Handler.class).value(), annot.scope()));
+                    handlers.add(new HandlerMeta(annot.value(), Throwing.consumer(ctx -> m.invoke(null, ctx)), m.getAnnotation(Handler.class).value(), annot.scope()));
             }
         });
     }

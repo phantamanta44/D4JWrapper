@@ -15,7 +15,7 @@ public @interface Handler {
     @Target(ElementType.METHOD)
     @interface On {
 
-        Events event();
+        Events value();
 
         EventBus.HandlerScope scope() default EventBus.HandlerScope.MODULE;
 
