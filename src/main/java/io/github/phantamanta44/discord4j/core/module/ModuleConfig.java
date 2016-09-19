@@ -66,10 +66,10 @@ public class ModuleConfig {
         JsonObject enableds = enableds();
         if (enableds.has(guild.id())) {
             if (!state && enableds.get(guild.id()).getAsBoolean()) {
-                onEnable.accept(guild);
+                onDisable.accept(guild);
                 enableds.addProperty(guild.id(), false);
             } else if (state && !enableds.get(guild.id()).getAsBoolean()) {
-                onDisable.accept(guild);
+                onEnable.accept(guild);
                 enableds.addProperty(guild.id(), true);
             }
         } else {
