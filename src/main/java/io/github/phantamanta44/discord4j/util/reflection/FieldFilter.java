@@ -10,7 +10,7 @@ import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 import io.github.lukehutch.fastclasspathscanner.FastClasspathScanner;
-import io.github.phantamanta44.discord4j.util.BitUtils;
+import io.github.phantamanta44.discord4j.util.math.BitUtils;
 
 public class FieldFilter extends MemberFilter<Field> {
 

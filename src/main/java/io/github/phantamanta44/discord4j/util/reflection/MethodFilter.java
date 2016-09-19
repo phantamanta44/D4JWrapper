@@ -1,7 +1,7 @@
 package io.github.phantamanta44.discord4j.util.reflection;
 
 import io.github.lukehutch.fastclasspathscanner.FastClasspathScanner;
-import io.github.phantamanta44.discord4j.util.BitUtils;
+import io.github.phantamanta44.discord4j.util.math.BitUtils;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;

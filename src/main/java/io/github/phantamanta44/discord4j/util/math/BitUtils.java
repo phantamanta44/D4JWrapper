@@ -1,4 +1,4 @@
-package io.github.phantamanta44.discord4j.util;
+package io.github.phantamanta44.discord4j.util.math;
 
 import io.github.phantamanta44.discord4j.util.function.Lambdas;
 
