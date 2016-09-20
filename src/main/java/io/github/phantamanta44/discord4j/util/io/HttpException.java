@@ -1,4 +1,4 @@
-package io.github.phantamanta44.discord4j.util.http;
+package io.github.phantamanta44.discord4j.util.io;
 
 public class HttpException extends Exception {
 

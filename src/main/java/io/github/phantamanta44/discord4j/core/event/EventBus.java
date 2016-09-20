@@ -31,11 +31,11 @@ public class EventBus implements IListener<Event> {
     public void initHandlers(Bot bot) {
         this.bot = bot;
         Reflect.types().tagged(Handler.class).find().forEach(h -> {
-            System.out.println(h.getClass().getName());
+            String modId = h.getAnnotation(Handler.class).value();
             for (Method m : h.getDeclaredMethods()) {
                 Handler.On annot = m.getAnnotation(Handler.On.class);
                 if (annot != null)
-                    handlers.add(new HandlerMeta(annot.value(), Throwing.consumer(ctx -> m.invoke(null, ctx)), m.getAnnotation(Handler.class).value(), annot.scope()));
+                    handlers.add(new HandlerMeta(annot.value(), Throwing.consumer(ctx -> m.invoke(null, ctx)), modId, annot.scope()));
             }
         });
     }
