@@ -1,8 +1,9 @@
 package io.github.phantamanta44.discord4j.util;
 
 import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 import javax.imageio.ImageIO;
 
@@ -14,9 +15,9 @@ public class ImageUtils {
 
     public static InputStream inputStream(BufferedImage image) {
         try {
-            VirtualByteStack bytes = new VirtualByteStack();
-            ImageIO.write(image, "png", bytes.getOutputStream());
-            return bytes.flip().getInputStream();
+            ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+            ImageIO.write(image, "png", bytes);
+            return new ByteArrayInputStream(bytes.toByteArray());
         } catch (IOException e) {
             throw new IllegalStateException(e);
         }

@@ -91,6 +91,10 @@ public class Channel extends Wrapper<IChannel> {
         return RequestQueue.request(() -> Wrapper.wrap(getBacking().sendMessage(msg)));
     }
 
+    public IUnaryPromise<Message> send(String msg, Object... args) {
+        return RequestQueue.request(() -> Wrapper.wrap(getBacking().sendMessage(String.format(msg, args))));
+    }
+
     public INullaryPromise setName(String name) {
         return RequestQueue.request(() -> getBacking().changeName(name));
     }

@@ -3,6 +3,7 @@ package io.github.phantamanta44.discord4j.util.concurrent.deferred;
 import io.github.phantamanta44.discord4j.util.function.Lambdas;
 
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 public class UnaryDeferred<A> extends AbstractDeferred<IUnaryPromise<A>> {
 
@@ -55,6 +56,15 @@ public class UnaryDeferred<A> extends AbstractDeferred<IUnaryPromise<A>> {
             public IUnaryPromise<A> progress(Runnable callback) {
                 onProgress = Lambdas.compose(onProgress, callback);
                 return this;
+            }
+
+            @Override
+            public <B> IUnaryPromise<B> map(Function<A, B> mapper) {
+                UnaryDeferred<B> def = new UnaryDeferred<>();
+                done(r -> def.resolve(mapper.apply(r)));
+                fail(def::reject);
+                progress(def::notifyProgress);
+                return def.promise();
             }
 
             @Override

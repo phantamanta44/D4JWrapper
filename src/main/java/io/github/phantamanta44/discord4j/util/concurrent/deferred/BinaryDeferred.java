@@ -3,6 +3,7 @@ package io.github.phantamanta44.discord4j.util.concurrent.deferred;
 import io.github.phantamanta44.discord4j.util.function.Lambdas;
 
 import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
 import java.util.function.Consumer;
 
 public class BinaryDeferred<A, B> extends AbstractDeferred<IBinaryPromise<A, B>> {
@@ -58,6 +59,15 @@ public class BinaryDeferred<A, B> extends AbstractDeferred<IBinaryPromise<A, B>>
             public IBinaryPromise<A, B> progress(Runnable callback) {
                 onProgress = Lambdas.compose(onProgress, callback);
                 return this;
+            }
+
+            @Override
+            public <C, D> IBinaryPromise<C, D> map(BiFunction<A, B, C> mapper1, BiFunction<A, B, D> mapper2) {
+                BinaryDeferred<C, D> def = new BinaryDeferred<>();
+                done((a, b) -> def.resolve(mapper1.apply(a, b), mapper2.apply(a, b)));
+                fail(def::reject);
+                progress(def::notifyProgress);
+                return def.promise();
             }
 
             @Override
