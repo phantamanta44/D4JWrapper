@@ -3,7 +3,6 @@ package io.github.phantamanta44.discord4j.util.concurrent.deferred;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
-import java.util.function.Function;
 
 public interface IBinaryPromise<A, B> extends IPromise {
 

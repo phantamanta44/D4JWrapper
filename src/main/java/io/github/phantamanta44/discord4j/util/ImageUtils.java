@@ -1,9 +1,10 @@
 package io.github.phantamanta44.discord4j.util;
 
 import java.awt.image.BufferedImage;
-import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Path;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 
 import javax.imageio.ImageIO;
 
