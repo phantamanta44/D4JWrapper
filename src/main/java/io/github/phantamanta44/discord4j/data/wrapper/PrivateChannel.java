@@ -13,36 +13,8 @@ public class PrivateChannel extends Channel {
         super(backing);
     }
 
-    public MessageStream messages() {
-        return new MessageStream(getBacking().getMessages());
-    }
-
-    public String name() {
-        return getBacking().getName();
-    }
-
     public User user() {
         return Wrapper.wrap(((IPrivateChannel)getBacking()).getRecipient());
-    }
-
-    public IUnaryPromise<Message> send(File file) {
-        return RequestQueue.request(() -> Wrapper.wrap(getBacking().sendFile(file)));
-    }
-
-    public IUnaryPromise<Message> send(File file, String caption) {
-        return RequestQueue.request(() -> Wrapper.wrap(getBacking().sendFile(file, caption)));
-    }
-
-    public IUnaryPromise<Message> send(String fileName, InputStream dataSrc) {
-        return RequestQueue.request(() -> Wrapper.wrap(getBacking().sendFile(dataSrc, fileName)));
-    }
-
-    public IUnaryPromise<Message> send(String fileName, InputStream dataSrc, String caption) {
-        return RequestQueue.request(() -> Wrapper.wrap(getBacking().sendFile(dataSrc, fileName, caption)));
-    }
-
-    public IUnaryPromise<Message> send(String msg) {
-        return RequestQueue.request(() -> Wrapper.wrap(getBacking().sendMessage(msg)));
     }
 
 }

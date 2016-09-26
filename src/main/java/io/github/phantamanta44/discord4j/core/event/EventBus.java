@@ -51,7 +51,9 @@ public class EventBus implements IListener<Event> {
                 if (handler.scope == HandlerScope.GLOBAL)
                     post(handler, event);
                 else if (handler.scope == HandlerScope.MODULE)
-                    tryPostModule(handler, event);
+                    tryPostModule(handler, event, false);
+                else if (handler.scope == HandlerScope.MODULE_SERV)
+                    tryPostModule(handler, event, true);
             }
         }
     }
@@ -68,19 +70,23 @@ public class EventBus implements IListener<Event> {
         Discord.executorPool().schedule(() -> handlerTask.cancel(true), 15000L, TimeUnit.MILLISECONDS);
     }
 
-    private void tryPostModule(HandlerMeta handler, Event event) {
+    private void tryPostModule(HandlerMeta handler, Event event, boolean ignorePm) {
         IEventContext ctx = generateContext(handler.event, event);
-        if (ctx.guild() != null && bot.moduleMan().configFor(handler.modId).enabled(ctx.guild())) {
-            Future<?> handlerTask = Discord.executorPool().submit(() -> {
-                try {
-                    handler.handler.accept(ctx);
-                } catch (Exception e) {
-                    Discord.logger().warn("Failed to pass {} to {}!", handler.event.toString(), handler.handler.getClass().getName());
-                    e.printStackTrace();
-                }
-            });
-            Discord.executorPool().schedule(() -> handlerTask.cancel(true), 15000L, TimeUnit.MILLISECONDS);
+        if (ctx.guild() == null) {
+            if (ignorePm)
+                return;
         }
+        else if (!bot.moduleMan().configFor(handler.modId).enabled(ctx.guild()))
+            return;
+        Future<?> handlerTask = Discord.executorPool().submit(() -> {
+            try {
+                handler.handler.accept(ctx);
+            } catch (Exception e) {
+                Discord.logger().warn("Failed to pass {} to {}!", handler.event.toString(), handler.handler.getClass().getName());
+                e.printStackTrace();
+            }
+        });
+        Discord.executorPool().schedule(() -> handlerTask.cancel(true), 15000L, TimeUnit.MILLISECONDS);
     }
 
     private IEventContext generateContext(Events type, Event event) { // TODO More specific event contexts that don't require reflection
@@ -113,7 +119,7 @@ public class EventBus implements IListener<Event> {
 
     public enum HandlerScope {
 
-        GLOBAL, MODULE
+        GLOBAL, MODULE, MODULE_SERV
 
     }
 
