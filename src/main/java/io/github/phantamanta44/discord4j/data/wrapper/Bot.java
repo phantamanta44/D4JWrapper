@@ -103,7 +103,7 @@ public class Bot { // TODO Events
     }
 
     public IUnaryPromise<Long> ping() {
-        return RequestQueue.request(dcCli::getResponseTime);
+        return RequestQueue.request(() -> dcCli.getResponseTime());
     }
 
     public INullaryPromise setAvatar(IIcon icon) {

@@ -4,7 +4,7 @@ import sx.blah.discord.handle.obj.Presences;
 
 public enum UserStatus {
 
-    ONLINE, AFK, OFFLINE, STREAMING;
+    ONLINE, AFK, OFFLINE, STREAMING, DO_NOT_DISTURB;
 
     public static UserStatus wrap(Presences status) {
         switch (status) {
@@ -16,6 +16,8 @@ public enum UserStatus {
                 return OFFLINE;
             case STREAMING:
                 return STREAMING;
+            case DND:
+                return DO_NOT_DISTURB;
         }
         throw new IllegalStateException();
     }
