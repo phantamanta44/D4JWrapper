@@ -25,6 +25,18 @@ public class Guild extends Wrapper<IGuild> { // TODO Voice channel stuff
         return getBacking().getChannels().stream().map(Wrapper::wrap);
     }
 
+    public Emoji emoji(String id) {
+        return Wrapper.wrap(getBacking().getEmojiByID(id));
+    }
+
+    public Emoji emojiOfName(String name) {
+        return Wrapper.wrap(getBacking().getEmojiByName(name));
+    }
+
+    public Stream<Emoji> emojis() {
+        return getBacking().getEmojis().stream().map(Wrapper::wrap);
+    }
+
     public boolean has(User user) {
         return users().anyMatch(u -> u.id().equalsIgnoreCase(user.id()));
     }
@@ -69,19 +81,8 @@ public class Guild extends Wrapper<IGuild> { // TODO Voice channel stuff
         return users().filter(GuildUser::hasNickname).filter(u -> u.displayName().equalsIgnoreCase(nick));
     }
 
-    public INullaryPromise addBot(String clientId, Permission... perms) {
-        return RequestQueue.request(() -> {
-            Permissions[] unwrapped = Arrays.stream(perms).map(Permission::getBacking).toArray(Permissions[]::new);
-            getBacking().addBot(clientId, EnumSet.of(unwrapped[0], Arrays.copyOfRange(unwrapped, 1, unwrapped.length)));
-        });
-    }
-
     public INullaryPromise ban(User user) {
         return RequestQueue.request(() -> getBacking().banUser(user.getBacking()));
-    }
-
-    public INullaryPromise destroy() {
-        return RequestQueue.request(() -> getBacking().deleteGuild());
     }
 
     public IUnaryPromise<Channel> makeChannel(String name) {

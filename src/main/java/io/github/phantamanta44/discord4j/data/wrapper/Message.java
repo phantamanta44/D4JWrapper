@@ -1,6 +1,7 @@
 package io.github.phantamanta44.discord4j.data.wrapper;
 
 import java.time.ZoneId;
+import java.util.List;
 import java.util.stream.Stream;
 
 import io.github.phantamanta44.discord4j.core.RequestQueue;
@@ -8,6 +9,7 @@ import io.github.phantamanta44.discord4j.data.Attachment;
 import io.github.phantamanta44.discord4j.util.concurrent.deferred.INullaryPromise;
 import io.github.phantamanta44.discord4j.util.concurrent.deferred.IUnaryPromise;
 import sx.blah.discord.handle.obj.IMessage;
+import sx.blah.discord.handle.obj.IReaction;
 
 public class Message extends Wrapper<IMessage> { // TODO Mention getter
 
@@ -46,6 +48,18 @@ public class Message extends Wrapper<IMessage> { // TODO Mention getter
     public boolean pinned() {
         return getBacking().isPinned();
     }
+    
+    public List<IReaction> reacts() {
+        return getBacking().getReactions();
+    }
+    
+    public IReaction reacts(String reaction) {
+        return getBacking().getReactionByName(reaction);
+    }
+    
+    public IReaction reacts(Emoji reaction) {
+        return getBacking().getReactionByIEmoji(reaction.getBacking());
+    }
 
     public INullaryPromise destroy() {
         return RequestQueue.request(getBacking()::delete);
@@ -57,6 +71,30 @@ public class Message extends Wrapper<IMessage> { // TODO Mention getter
 
     public IUnaryPromise<Message> edit(String format, Object... args) {
         return edit(String.format(format, args));
+    }
+    
+    public INullaryPromise react(String reaction) {
+        return RequestQueue.request(() -> getBacking().addReaction(reaction));
+    }
+
+    public INullaryPromise react(Emoji reaction) {
+        return RequestQueue.request(() -> getBacking().addReaction(reaction.getBacking()));
+    }
+
+    public INullaryPromise react(IReaction reaction) {
+        return RequestQueue.request(() -> getBacking().addReaction(reaction));
+    }
+    
+    public INullaryPromise unreact(IReaction reaction) {
+        return RequestQueue.request(() -> getBacking().removeReaction(reaction));
+    }
+
+    public INullaryPromise unreact(User user, IReaction reaction) {
+        return RequestQueue.request(() -> getBacking().removeReaction(user.getBacking(), reaction));
+    }
+    
+    public INullaryPromise unreactAll() {
+        return RequestQueue.request(getBacking()::removeAllReactions);
     }
 
 }

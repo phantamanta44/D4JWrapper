@@ -50,7 +50,7 @@
         <dependency>
             <groupId>com.github.austinv11</groupId>
             <artifactId>Discord4J</artifactId>
-            <version>2.6.1</version>
+            <version>238c70281705263801cdb60dcd8d137cc9c7802d</version>
         </dependency>
         <dependency>
             <groupId>com.github.fge</groupId>

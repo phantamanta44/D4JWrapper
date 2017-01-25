@@ -99,11 +99,7 @@ public class Bot { // TODO Events
     }
 
     public INullaryPromise leave(Guild guild) {
-        return RequestQueue.request(() -> guild.getBacking().leaveGuild());
-    }
-
-    public IUnaryPromise<Long> ping() {
-        return RequestQueue.request(() -> dcCli.getResponseTime());
+        return RequestQueue.request(() -> guild.getBacking().leave());
     }
 
     public INullaryPromise setAvatar(IIcon icon) {

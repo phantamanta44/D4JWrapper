@@ -3,6 +3,7 @@ package io.github.phantamanta44.discord4j.data.wrapper;
 import io.github.phantamanta44.discord4j.core.RequestQueue;
 import io.github.phantamanta44.discord4j.util.concurrent.deferred.INullaryPromise;
 import io.github.phantamanta44.discord4j.util.concurrent.deferred.IUnaryPromise;
+import sx.blah.discord.api.internal.json.objects.EmbedObject;
 import sx.blah.discord.handle.obj.IChannel;
 
 import java.io.File;
@@ -63,12 +64,20 @@ public class Channel extends Wrapper<IChannel> {
         return RequestQueue.request(() -> getBacking().delete());
     }
 
-    public IUnaryPromise<String> generateInvite(int age, int uses, boolean tempUsers) {
-        return RequestQueue.request(() -> getBacking().createInvite(age, uses, tempUsers).getInviteCode());
+    public IUnaryPromise<String> generateInvite(int age, int uses, boolean tempUsers, boolean unique) {
+        return RequestQueue.request(() -> getBacking().createInvite(age, uses, tempUsers, unique).getInviteCode());
     }
 
     public INullaryPromise pin(Message msg) {
         return RequestQueue.request(() -> getBacking().pin(msg.getBacking()));
+    }
+
+    public IUnaryPromise<Message> send(EmbedObject embed) {
+        return RequestQueue.request(() -> Wrapper.wrap(getBacking().sendMessage(embed)));
+    }
+
+    public IUnaryPromise<Message> send(EmbedObject embed, String caption) {
+        return RequestQueue.request(() -> Wrapper.wrap(getBacking().sendMessage(caption, embed)));
     }
 
     public IUnaryPromise<Message> send(File file) {
@@ -76,15 +85,11 @@ public class Channel extends Wrapper<IChannel> {
     }
 
     public IUnaryPromise<Message> send(File file, String caption) {
-        return RequestQueue.request(() -> Wrapper.wrap(getBacking().sendFile(file, caption)));
-    }
-
-    public IUnaryPromise<Message> send(String fileName, InputStream dataSrc) {
-        return RequestQueue.request(() -> Wrapper.wrap(getBacking().sendFile(dataSrc, fileName)));
+        return RequestQueue.request(() -> Wrapper.wrap(getBacking().sendFile(caption, file)));
     }
 
     public IUnaryPromise<Message> send(String fileName, InputStream dataSrc, String caption) {
-        return RequestQueue.request(() -> Wrapper.wrap(getBacking().sendFile(dataSrc, fileName, caption)));
+        return RequestQueue.request(() -> Wrapper.wrap(getBacking().sendFile(caption, dataSrc, fileName)));
     }
 
     public IUnaryPromise<Message> send(String msg) {

@@ -7,20 +7,22 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Stream;
 
 import io.github.phantamanta44.discord4j.util.math.MathUtils;
-import sx.blah.discord.handle.obj.IChannel;
-import sx.blah.discord.handle.obj.IDiscordObject;
-import sx.blah.discord.handle.obj.IGuild;
-import sx.blah.discord.handle.obj.IMessage;
-import sx.blah.discord.handle.obj.IPrivateChannel;
-import sx.blah.discord.handle.obj.IRole;
-import sx.blah.discord.handle.obj.IUser;
+import sx.blah.discord.handle.obj.*;
 
 public abstract class Wrapper<T extends IDiscordObject<T>> implements Comparable<Wrapper<?>> {
 
     private static final Map<Class<?>, Map<IDiscordObject<?>, Wrapper<?>>> cachedWrappers = new HashMap<>();
 
     static {
-        Stream.of(IGuild.class, IPrivateChannel.class, IChannel.class, IUser.class, IMessage.class, IRole.class).forEach(c -> cachedWrappers.put(c, new ConcurrentHashMap<>()));
+        Stream.of(
+                IGuild.class,
+                IPrivateChannel.class,
+                IChannel.class,
+                IUser.class,
+                IMessage.class,
+                IRole.class,
+                IEmoji.class
+        ).forEach(c -> cachedWrappers.put(c, new ConcurrentHashMap<>()));
     }
 
 
@@ -45,6 +47,8 @@ public abstract class Wrapper<T extends IDiscordObject<T>> implements Comparable
             return (W)cache(new Message((IMessage)raw), iface);
         else if (raw instanceof IRole)
             return (W)cache(new Role((IRole)raw), iface);
+        else if (raw instanceof IEmoji)
+            return (W)cache(new Emoji((IEmoji)raw), iface);
         throw new IllegalStateException();
     }
 
