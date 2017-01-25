@@ -12,4 +12,11 @@ public class CollUtils {
     public static boolean containsAll(Collection<?> container, Object[] objects) {
         return container.containsAll(Arrays.asList(objects));
     }
+
+    @SuppressWarnings("unchecked")
+    public static <T> T random(Collection<T> container) {
+        Object[] asArray = container.toArray();
+        return (T)asArray[(int)Math.floor(Math.random() * asArray.length)];
+    }
+
 }
